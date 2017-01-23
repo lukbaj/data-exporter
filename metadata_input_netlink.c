@@ -62,9 +62,6 @@ static uint8_t md_input_netlink_parse_conn_event(struct md_input_netlink *min,
         if (!strcmp(key, "event_value"))
             mce->event_value = (uint8_t) json_object_get_int(val);
 
-        if (!strcmp(key, "event_value_str"))
-            mce->event_value_str = json_object_get_string(val);
-
         if (!strcmp(key, "interface_id_type"))
             mce->interface_id_type = (uint8_t) json_object_get_int(val);
 
@@ -109,6 +106,18 @@ static uint8_t md_input_netlink_parse_conn_event(struct md_input_netlink *min,
 
         if (!strcmp(key, "tx_bytes"))
             mce->tx_bytes = (uint64_t) json_object_get_int64(val);
+
+        if (!strcmp(key, "has_ip"))
+            mce->has_ip = (uint8_t) json_object_get_int(val);
+
+        if (!strcmp(key, "connectivity"))
+            mce->connectivity = (uint8_t) json_object_get_int(val);
+
+        if (!strcmp(key, "connection_mode"))
+            mce->connection_mode = (uint8_t) json_object_get_int(val);
+
+        if (!strcmp(key, "quality"))
+            mce->tx_bytes = (uint8_t) json_object_get_int(val);
     }
 
     if (mce->event_param == CONN_EVENT_DATA_USAGE_UPDATE) {
@@ -133,7 +142,7 @@ static uint8_t md_input_netlink_parse_conn_event(struct md_input_netlink *min,
     //We need to update the value in case of a connection event update, since it
     //is a string
     //TODO: Implement a more elegant technique if we get more cases like this
-    if (mce->event_param == CONN_EVENT_META_UPDATE && !mce->event_value_str) {
+    if (mce->event_param == CONN_EVENT_META_UPDATE) {
         META_PRINT_SYSLOG(min->parent, LOG_ERR, "Missing event value for connection update\n");
         return RETVAL_FAILURE;
     }
